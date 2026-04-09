@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!-- saved from url=(0082)file:///C:/Users/zach.richards/Downloads/ellucian_insights_folder_structure_5.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ellucian Insights — Folder Structure &amp; Roles</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    background: #f7f6f3; color: #2c2c2a;
+    padding: 32px; min-height: 100vh;
+  }
+  .container { max-width: 1040px; margin: 0 auto; }
+  .header { margin-bottom: 32px; padding-bottom: 20px; border-bottom: 2px solid #d3d1c7; }
+  .header h1 { font-size: 22px; font-weight: 600; color: #1a1a18; letter-spacing: -0.3px; }
+  .header p { font-size: 13px; color: #7a7970; margin-top: 6px; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+    padding: 14px 18px; background: #efeee9; border-radius: 8px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #5f5e5a; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .legend-sep { width: 1px; height: 20px; background: #ccc9be; }
+
+  .tree ul { list-style: none; padding-left: 0; }
+  .tree ul ul { padding-left: 28px; }
+  .tree li { position: relative; }
+  .tree ul ul li::before {
+    content: ''; position: absolute; left: -16px; top: 0; bottom: 50%;
+    width: 1px; background: #ccc9be;
+  }
+  .tree ul ul li::after {
+    content: ''; position: absolute; left: -16px; top: 50%;
+    width: 12px; height: 1px; background: #ccc9be;
+  }
+  .tree ul ul li:last-child::before { bottom: 50%; }
+  .tree ul ul > li:not(:last-child)::before { bottom: 0; }
+
+  .node {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 7px 12px; margin: 2px 0; border-radius: 8px;
+    cursor: pointer; transition: background .15s; user-select: none;
+  }
+  .node:hover { background: rgba(0,0,0,.04); }
+  .node-left { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .chevron {
+    width: 16px; height: 16px; flex-shrink: 0;
+    transition: transform .2s; color: #aaa89f;
+  }
+  .chevron.collapsed { transform: rotate(-90deg); }
+  .chevron.hidden { visibility: hidden; }
+  .icon { width: 18px; height: 18px; flex-shrink: 0; }
+  .node-name { font-size: 14px; font-weight: 500; color: #2c2c2a; white-space: nowrap; }
+  .node.root .node-name { font-size: 15px; font-weight: 600; }
+  .node.data-model .node-name {
+    font-weight: 400; font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; color: #534ab7;
+  }
+  .count-badge { font-size: 10px; color: #aaa89f; font-weight: 400; margin-left: 4px; }
+
+  .roles-badges {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-left: auto; padding-left: 12px;
+  }
+  .badge {
+    font-size: 9px; font-weight: 500; padding: 2px 6px;
+    border-radius: 4px; white-space: nowrap; letter-spacing: 0.1px;
+  }
+  .badge.viewer { background: #e1f5ee; color: #085041; }
+  .badge.editor { background: #e6f1fb; color: #0c447c; }
+  .badge.writer { background: #eeedfe; color: #3c3489; }
+  .badge.admin  { background: #faeeda; color: #633806; }
+  .badge.expert { background: #faece7; color: #712b13; }
+  .badge.none   { background: #f1efe8; color: #888780; font-style: italic; }
+
+  .children { overflow: hidden; }
+  .children.collapsed { display: none; }
+
+  @media (max-width: 700px) {
+    body { padding: 16px; }
+    .roles-badges { display: none; }
+    .tree ul ul { padding-left: 20px; }
+  }
+  @media print {
+    body { background: #fff; padding: 16px; }
+    .node:hover { background: none; }
+    .children.collapsed { display: block !important; }
+    .chevron { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>Ellucian Insights — Folder structure &amp; role assignments</h1>
+    <p>Del Mar College · Click folders to expand/collapse · Role badges show assigned access</p>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#1d9e75"></span> Institution root</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#378add"></span> Department</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#ba7517"></span> Collection</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#7f77dd"></span> Data models</div>
+    <div class="legend-sep"></div>
+    <div class="legend-item"><span class="badge viewer">Viewer</span></div>
+    <div class="legend-item"><span class="badge editor">Editor</span></div>
+    <div class="legend-item"><span class="badge writer">Writer</span></div>
+    <div class="legend-item"><span class="badge expert">Expert</span></div>
+    <div class="legend-item"><span class="badge admin">Admin</span></div>
+  </div>
+  <div class="tree"><ul id="root"><li><div class="node root"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#1d9e75" opacity="0.2" stroke="#1d9e75" stroke-width="1.2"></path></svg></span><span class="node-name">Del Mar College</span><span class="count-badge">11</span></div></div><ul class="children"><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Continuing Education</span><span class="count-badge">2</span></div></div><ul class="children"><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Corporate Services</span></div><div class="roles-badges"><span class="badge viewer">CS INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Transportation</span></div><div class="roles-badges"><span class="badge viewer">CS INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Finance</span><span class="count-badge">6</span></div></div><ul class="children"><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Accounts Payable</span><span class="count-badge">1</span></div><div class="roles-badges"><span class="badge viewer">CE INSIGHTS REPORT VIEWER</span><span class="badge editor">CF INSIGHTS REPORT EDITOR</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div><ul class="children"><li><div class="node data-model"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="9" cy="5" rx="6" ry="2.5" fill="#7f77dd" opacity="0.2" stroke="#7f77dd" stroke-width="1.1"></ellipse><path d="M3 5v8c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5V5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path><path d="M3 9c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path></svg></span><span class="node-name">Accounts Payable Data Models</span></div><div class="roles-badges"><span class="badge viewer">CF INSIGHTS REPORT VIEWER</span><span class="badge editor">CF INSIGHTS REPORT EDITOR</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Budget</span><span class="count-badge">1</span></div><div class="roles-badges"><span class="badge viewer">CS INSIGHTS REPORT VIEWER</span><span class="badge editor">CF INSIGHTS REPORT EDITOR</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div><ul class="children"><li><div class="node data-model"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="9" cy="5" rx="6" ry="2.5" fill="#7f77dd" opacity="0.2" stroke="#7f77dd" stroke-width="1.1"></ellipse><path d="M3 5v8c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5V5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path><path d="M3 9c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path></svg></span><span class="node-name">Budget Data Models</span></div><div class="roles-badges"><span class="badge viewer">CF INSIGHTS REPORT VIEWER</span><span class="badge editor">CS INSIGHTS REPORT EDITOR</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Grants</span><span class="count-badge">1</span></div><div class="roles-badges"><span class="badge viewer">CF INSIGHTS REPORT VIEWER</span><span class="badge editor">CF INSIGHTS REPORT EDITOR</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div><ul class="children"><li><div class="node data-model"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="9" cy="5" rx="6" ry="2.5" fill="#7f77dd" opacity="0.2" stroke="#7f77dd" stroke-width="1.1"></ellipse><path d="M3 5v8c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5V5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path><path d="M3 9c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path></svg></span><span class="node-name">Grants Data Models</span></div><div class="roles-badges"><span class="badge viewer">CE INSIGHTS REPORT VIEWER</span><span class="badge editor">CF INSIGHTS REPORT EDITOR</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Property Accounting</span><span class="count-badge">1</span></div><div class="roles-badges"><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div><ul class="children"><li><div class="node data-model"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="9" cy="5" rx="6" ry="2.5" fill="#7f77dd" opacity="0.2" stroke="#7f77dd" stroke-width="1.1"></ellipse><path d="M3 5v8c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5V5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path><path d="M3 9c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path></svg></span><span class="node-name">Property Accounting Data Models</span></div><div class="roles-badges"><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Purchasing</span></div><div class="roles-badges"><span class="badge viewer">PU INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Student Accounts</span></div><div class="roles-badges"><span class="badge viewer">BU INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Financial Aid</span></div><div class="roles-badges"><span class="badge none">No roles assigned</span></div></div></li><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Human Resources</span><span class="count-badge">1</span></div></div><ul class="children"><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Human Resources</span><span class="count-badge">1</span></div><div class="roles-badges"><span class="badge editor">HR INSIGHTS REPORT EDITOR</span><span class="badge viewer">HR INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span><span class="badge expert">INSIGHTS REPORT EXPERT</span></div></div><ul class="children"><li><div class="node branch"><div class="node-left"><span><svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#378add" opacity="0.2" stroke="#378add" stroke-width="1.2"></path></svg></span><span class="node-name">Payroll</span><span class="count-badge">1</span></div><div class="roles-badges"><span class="badge editor">CF INSIGHTS REPORT EDITOR</span><span class="badge editor">HR INSIGHTS REPORT EDITOR</span><span class="badge viewer">HR INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span><span class="badge expert">INSIGHTS REPORT EXPERT</span><span class="badge editor">PU INSIGHTS REPORT EDITOR</span><span class="badge viewer">PU INSIGHTS REPORT VIEWER</span></div></div><ul class="children"><li><div class="node data-model"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="9" cy="5" rx="6" ry="2.5" fill="#7f77dd" opacity="0.2" stroke="#7f77dd" stroke-width="1.1"></ellipse><path d="M3 5v8c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5V5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path><path d="M3 9c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5" stroke="#7f77dd" stroke-width="1.1" fill="none"></path></svg></span><span class="node-name">Payroll Data Models</span></div><div class="roles-badges"><span class="badge editor">CS INSIGHTS REPORT EDITOR</span><span class="badge editor">HR INSIGHTS REPORT EDITOR</span><span class="badge viewer">HR INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span><span class="badge expert">INSIGHTS REPORT EXPERT</span><span class="badge editor">PU INSIGHTS REPORT EDITOR</span><span class="badge viewer">PR INSIGHTS REPORT VIEWER</span></div></div></li></ul></li></ul></li></ul></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Institutional Research</span></div><div class="roles-badges"><span class="badge writer">IT INSIGHTS REPORT WRITER</span><span class="badge writer">INSIGHTS REPORT WRITER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Institutional Reports</span></div><div class="roles-badges"><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Information Technology</span></div><div class="roles-badges"><span class="badge admin">INSIGHTS ADMINISTRATOR</span><span class="badge writer">IR INSIGHTS REPORT WRITER</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Public</span></div><div class="roles-badges"><span class="badge viewer">FA INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Student Enrollment Center</span></div><div class="roles-badges"><span class="badge viewer">AD INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Student Records Office</span></div><div class="roles-badges"><span class="badge viewer">SR INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li><li><div class="node leaf"><div class="node-left"><span><svg class="chevron hidden" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"></path></svg></span><span><svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="#ba7517" opacity="0.2" stroke="#ba7517" stroke-width="1.2"></path></svg></span><span class="node-name">Veteran's Office</span></div><div class="roles-badges"><span class="badge viewer">VA INSIGHTS REPORT VIEWER</span><span class="badge admin">INSIGHTS ADMINISTRATOR</span></div></div></li></ul></li></ul></div>
+</div>
+
+<script>
+var V = "viewer", E = "editor", W = "writer", A = "admin", X = "expert";
+
+function R(name) {
+  var k = "none";
+  if (name.indexOf("VIEWER") !== -1) k = V;
+  else if (name.indexOf("EDITOR") !== -1) k = E;
+  else if (name.indexOf("WRITER") !== -1) k = W;
+  else if (name.indexOf("ADMINISTRATOR") !== -1) k = A;
+  else if (name.indexOf("EXPERT") !== -1) k = X;
+  return {t: name, k: k};
+}
+
+var data = {
+  name: "Del Mar College", type: "root", roles: [],
+  children: [
+    { name: "Continuing Education", type: "branch", roles: [],
+      children: [
+        { name: "Corporate Services", type: "leaf",
+          roles: [R("CS INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] },
+        { name: "Transportation", type: "leaf",
+          roles: [R("CS INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] }
+    ]},
+    { name: "Finance", type: "branch", roles: [],
+      children: [
+        { name: "Accounts Payable", type: "branch",
+          roles: [R("CE INSIGHTS REPORT VIEWER"), R("CF INSIGHTS REPORT EDITOR"), R("INSIGHTS ADMINISTRATOR")],
+          children: [
+            { name: "Accounts Payable Data Models", type: "data-model",
+              roles: [R("CF INSIGHTS REPORT VIEWER"), R("CF INSIGHTS REPORT EDITOR"), R("INSIGHTS ADMINISTRATOR")] }
+        ]},
+        { name: "Budget", type: "branch",
+          roles: [R("CS INSIGHTS REPORT VIEWER"), R("CF INSIGHTS REPORT EDITOR"), R("INSIGHTS ADMINISTRATOR")],
+          children: [
+            { name: "Budget Data Models", type: "data-model",
+              roles: [R("CF INSIGHTS REPORT VIEWER"), R("CS INSIGHTS REPORT EDITOR"), R("INSIGHTS ADMINISTRATOR")] }
+        ]},
+        { name: "Grants", type: "branch",
+          roles: [R("CF INSIGHTS REPORT VIEWER"), R("CF INSIGHTS REPORT EDITOR"), R("INSIGHTS ADMINISTRATOR")],
+          children: [
+            { name: "Grants Data Models", type: "data-model",
+              roles: [R("CE INSIGHTS REPORT VIEWER"), R("CF INSIGHTS REPORT EDITOR"), R("INSIGHTS ADMINISTRATOR")] }
+        ]},
+        { name: "Property Accounting", type: "branch",
+          roles: [R("INSIGHTS ADMINISTRATOR")],
+          children: [
+            { name: "Property Accounting Data Models", type: "data-model",
+              roles: [R("INSIGHTS ADMINISTRATOR")] }
+        ]},
+        { name: "Purchasing", type: "leaf",
+          roles: [R("PU INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] },
+        { name: "Student Accounts", type: "leaf",
+          roles: [R("BU INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] }
+    ]},
+    { name: "Financial Aid", type: "leaf", roles: [] },
+    { name: "Human Resources", type: "branch", roles: [],
+      children: [
+        { name: "Human Resources", type: "branch",
+          roles: [R("HR INSIGHTS REPORT EDITOR"), R("HR INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR"), R("INSIGHTS REPORT EXPERT")],
+          children: [
+            { name: "Payroll", type: "branch",
+              roles: [R("CF INSIGHTS REPORT EDITOR"), R("HR INSIGHTS REPORT EDITOR"), R("HR INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR"), R("INSIGHTS REPORT EXPERT"), R("PU INSIGHTS REPORT EDITOR"), R("PU INSIGHTS REPORT VIEWER")],
+          children: [
+            { name: "Payroll Data Models", type: "data-model",
+              roles: [R("CS INSIGHTS REPORT EDITOR"), R("HR INSIGHTS REPORT EDITOR"), R("HR INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR"), R("INSIGHTS REPORT EXPERT"), R("PU INSIGHTS REPORT EDITOR"), R("PR INSIGHTS REPORT VIEWER")] }
+        ]}
+      ]}
+    ]},
+    { name: "Institutional Research", type: "leaf",
+      roles: [R("IT INSIGHTS REPORT WRITER"), R("INSIGHTS REPORT WRITER"), R("INSIGHTS ADMINISTRATOR")] },
+    { name: "Institutional Reports", type: "leaf",
+      roles: [R("INSIGHTS ADMINISTRATOR")] },
+    { name: "Information Technology", type: "leaf",
+      roles: [R("INSIGHTS ADMINISTRATOR"), R("IR INSIGHTS REPORT WRITER")] },
+    { name: "Public", type: "leaf",
+      roles: [R("FA INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] },
+    { name: "Student Enrollment Center", type: "leaf",
+      roles: [R("AD INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] },
+    { name: "Student Records Office", type: "leaf",
+      roles: [R("SR INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] },
+    { name: "Veteran's Office", type: "leaf",
+      roles: [R("VA INSIGHTS REPORT VIEWER"), R("INSIGHTS ADMINISTRATOR")] }
+  ]
+};
+
+var iconColors = { root:"#1d9e75", branch:"#378add", leaf:"#ba7517", "data-model":"#7f77dd" };
+
+function folderSVG(color) {
+  return '<svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M2 5v9a1.5 1.5 0 001.5 1.5h11A1.5 1.5 0 0016 14V7.5A1.5 1.5 0 0014.5 6H9.5L8 4H3.5A1.5 1.5 0 002 5z" fill="' + color + '" opacity="0.2" stroke="' + color + '" stroke-width="1.2"/></svg>';
+}
+function dbSVG(color) {
+  return '<svg class="icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<ellipse cx="9" cy="5" rx="6" ry="2.5" fill="' + color + '" opacity="0.2" stroke="' + color + '" stroke-width="1.1"/>' +
+    '<path d="M3 5v8c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5V5" stroke="' + color + '" stroke-width="1.1" fill="none"/>' +
+    '<path d="M3 9c0 1.38 2.69 2.5 6 2.5s6-1.12 6-2.5" stroke="' + color + '" stroke-width="1.1" fill="none"/></svg>';
+}
+function chevronSVG() {
+  return '<svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l4 4-4 4"/></svg>';
+}
+
+function buildTree(node, parent) {
+  var li = document.createElement('li');
+  var hasKids = node.children && node.children.length > 0;
+  var color = iconColors[node.type] || "#888";
+
+  var div = document.createElement('div');
+  div.className = 'node ' + node.type;
+
+  var left = document.createElement('div');
+  left.className = 'node-left';
+
+  var chev = document.createElement('span');
+  chev.innerHTML = chevronSVG();
+  chev.querySelector('.chevron').classList.toggle('hidden', !hasKids);
+  left.appendChild(chev);
+
+  var icon = document.createElement('span');
+  icon.innerHTML = node.type === 'data-model' ? dbSVG(color) : folderSVG(color);
+  left.appendChild(icon);
+
+  var name = document.createElement('span');
+  name.className = 'node-name';
+  name.textContent = node.name;
+  left.appendChild(name);
+
+  if (hasKids) {
+    var cnt = document.createElement('span');
+    cnt.className = 'count-badge';
+    cnt.textContent = node.children.length;
+    left.appendChild(cnt);
+  }
+  div.appendChild(left);
+
+  if (node.roles && node.roles.length) {
+    var badges = document.createElement('div');
+    badges.className = 'roles-badges';
+    node.roles.forEach(function(r) {
+      var b = document.createElement('span');
+      b.className = 'badge ' + r.k;
+      b.textContent = r.t;
+      badges.appendChild(b);
+    });
+    div.appendChild(badges);
+  } else if (!hasKids) {
+    var badges = document.createElement('div');
+    badges.className = 'roles-badges';
+    var b = document.createElement('span');
+    b.className = 'badge none';
+    b.textContent = 'No roles assigned';
+    badges.appendChild(b);
+    div.appendChild(badges);
+  }
+
+  li.appendChild(div);
+
+  if (hasKids) {
+    var ul = document.createElement('ul');
+    ul.className = 'children';
+    node.children.forEach(function(c) { buildTree(c, ul); });
+    li.appendChild(ul);
+    div.addEventListener('click', function() {
+      var collapsed = ul.classList.toggle('collapsed');
+      chev.querySelector('.chevron').classList.toggle('collapsed', collapsed);
+    });
+  }
+  parent.appendChild(li);
+}
+
+buildTree(data, document.getElementById('root'));
+</script>
+
+
+</body></html>
