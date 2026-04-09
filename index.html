@@ -40,17 +40,33 @@
 
   .node {
     display: flex; align-items: flex-start; gap: 10px;
-    padding: 7px 12px; margin: 2px 0; border-radius: 8px;
-    cursor: pointer; transition: background .15s; user-select: none;
+    padding: 10px 14px; margin: 3px 0; border-radius: 8px;
+    transition: background .15s; user-select: none;
+    min-height: 42px;
   }
-  .node:hover { background: rgba(0,0,0,.04); }
+  .node.has-children {
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .node.has-children:hover {
+    background: rgba(55,138,221,.06);
+    border-color: rgba(55,138,221,.2);
+  }
+  .node.has-children:active { background: rgba(55,138,221,.12); }
+  .node:not(.has-children) { padding-left: 44px; }
   .node-left { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .toggle-btn {
+    width: 28px; height: 28px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; border: none; background: transparent;
+    cursor: pointer; transition: all .15s; padding: 0;
+  }
+  .toggle-btn:hover { background: rgba(55,138,221,.12); }
   .chevron {
-    width: 16px; height: 16px; flex-shrink: 0;
-    transition: transform .2s; color: #aaa89f;
+    width: 18px; height: 18px; flex-shrink: 0;
+    transition: transform .2s; color: #666;
   }
   .chevron.collapsed { transform: rotate(-90deg); }
-  .chevron.hidden { visibility: hidden; }
   .icon { width: 18px; height: 18px; flex-shrink: 0; }
   .node-name { font-size: 14px; font-weight: 500; color: #2c2c2a; white-space: nowrap; }
   .node.root .node-name { font-size: 15px; font-weight: 600; }
@@ -245,14 +261,18 @@ function buildTree(node, parent) {
 
   var div = document.createElement('div');
   div.className = 'node ' + node.type;
+  if (hasKids) div.classList.add('has-children');
 
   var left = document.createElement('div');
   left.className = 'node-left';
 
-  var chev = document.createElement('span');
-  chev.innerHTML = chevronSVG();
-  chev.querySelector('.chevron').classList.toggle('hidden', !hasKids);
-  left.appendChild(chev);
+  if (hasKids) {
+    var btn = document.createElement('button');
+    btn.className = 'toggle-btn';
+    btn.innerHTML = chevronSVG();
+    btn.title = 'Click to expand/collapse';
+    left.appendChild(btn);
+  }
 
   var icon = document.createElement('span');
   icon.innerHTML = node.type === 'data-model' ? dbSVG(color) : folderSVG(color);
@@ -300,7 +320,7 @@ function buildTree(node, parent) {
     li.appendChild(ul);
     div.addEventListener('click', function() {
       var collapsed = ul.classList.toggle('collapsed');
-      chev.querySelector('.chevron').classList.toggle('collapsed', collapsed);
+      btn.querySelector('.chevron').classList.toggle('collapsed', collapsed);
     });
   }
   parent.appendChild(li);
@@ -312,10 +332,8 @@ function toggleAll(collapse) {
   document.querySelectorAll('.children').forEach(function(ul) {
     ul.classList.toggle('collapsed', collapse);
   });
-  document.querySelectorAll('.chevron').forEach(function(chev) {
-    if (!chev.classList.contains('hidden')) {
-      chev.classList.toggle('collapsed', collapse);
-    }
+  document.querySelectorAll('.toggle-btn .chevron').forEach(function(chev) {
+    chev.classList.toggle('collapsed', collapse);
   });
 }
 </script>
